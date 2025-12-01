@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "compare": "c",
+        "cstdint": "c",
+        "config.h": "c",
+        "math.h": "c",
+        "stdlib.h": "c",
+        "cstdlib": "cpp",
+        "ch559.h": "c"
+    }
+}

@@ -1,0 +1,335 @@
+#pragma once
+
+#include <mcs51/compiler.h>
+
+// NOTE: MCS51 not supported SFR16E macro
+
+// USB_DEV_AD
+#define bUDA_GP_BIT 0b10000000
+
+// USB_INT_ST
+#define TOKEN_OUT      0b00000000
+#define TOKEN_SOF      0b00010000
+#define TOKEN_IN       0b00100000
+#define TOKEN_SETUP    0b00110000
+#define MASK_UIS_H_RES 0b00001111
+
+// UEPn_CTRL
+#define bUEP_R_TOG 0b10000000
+#define bUEP_T_TOG 0b01000000
+
+#define MASK_UEP_R_RES    0b00001100
+#define UEP_R_RES_ACK     0b00000000
+#define UEP_R_RES_NAK     0b00001000
+#define UEP_R_RES_STALL   0b00001100
+
+#define MASK_UEP_T_RES    0b00000011
+#define UEP_T_RES_ACK     0b00000000
+#define UEP_T_RES_NAK     0b00000010
+#define UEP_T_RES_STALL   0b00000011
+
+// UEP4_1_MOD
+#define bUEP1_RX_EN 0b10000000
+#define bUEP1_TX_EN 0b01000000
+
+// UEP2_3_MOD
+#define bUEP3_RX_EN 0b10000000
+#define bUEP3_TX_EN 0b01000000
+#define bUEP2_RX_EN 0b00001000
+#define bUEP2_TX_EN 0b00000100
+
+// USB_INT_EN
+#define bUIE_DEV_SOF  0b10000000
+#define bUIE_DEV_NAK  0b01000000
+#define bUIE_FIFO_OV  0b00010000
+#define bUIE_HST_SOF  0b00001000
+#define bUIE_SUSPEND  0b00000100
+#define bUIE_TRANSFER 0b00000010
+#define bUIE_DETECT   0b00000001
+#define bUIE_BUS_RST  0b00000001
+
+// UDEV_CTRL
+#define bUD_RECV_DIS  0b01000000
+#define bUD_DP_PD_DIS 0b00100000
+#define bUD_DM_PD_DIS 0b00010000
+#define bUD_DIFF_IN   0b00001000
+#define bUD_LOW_SPEED 0b00000100
+#define bUD_GP_BIT    0b00000010
+#define bUD_PORT_EN   0b00000001
+
+// USB_CTRL
+#define bUC_HOST_MODE 0b10000000
+#define bUC_LOW_SPEED 0b01000000
+#define bUC_DEV_PU_EN 0b00100000
+
+#define UC_SYS_CTRL_DISABLE 0b00000000
+#define UC_SYS_CTRL_NO_PU   0b00010000
+#define UC_SYS_CTRL_PU      0b00100000
+#define UC_SYS_CTRL_WEAK_PU 0b00110000
+
+#define bUC_INT_BUSY  0b00001000
+#define bUC_RESET_SIE 0b00000100
+#define bUC_CLR_ALL   0b00000010
+#define bUC_DMA_EN    0b00000001
+
+// UH_EP_MOD
+#define bUH_EP_TX_EN    0b01000000
+#define bUH_EP_TBUF_MOD 0b00010000
+#define bUH_EP_RX_EN    0b00001000
+#define bUH_EP_RBUF_MOD 0b00000001
+
+// UH_SETUP
+#define bUH_PRE_PID_EN 0b10000000
+#define bUH_SOF_EN     0b01000000
+
+// UHUBn_CTRL
+#define bUH1_DISABLE   0b10000000
+#define bUH_RECV_DIS   0b01000000
+#define bUH_DP_PD_DIS  0b00100000
+#define bUH_DM_PD_DIS  0b00010000
+#define bUH_DIFF_IN    0b00001000
+#define bUH_LOW_SPEED  0b00000100
+#define bUH_BUS_RESET  0b00000010
+#define bUH_PORT_EN    0b00000001
+
+// USB_HUB_ST
+#define bUHS_H1_ATTACH 0b10000000
+#define bUHS_HM_LEVEL  0b01000000
+#define bUHS_HP_PIN    0b00100000
+#define bUHS_HM_PIN    0b00010000
+#define bUHS_H0_ATTACH 0b00001000
+#define bUHS_DM_LEVEL  0b00000100
+#define bUHS_DP_PIN    0b00000010
+#define bUHS_DM_PIN    0b00000001
+
+// UH_TX_CTRL
+#define bUH_T_TOG      0b01000000
+#define bUH_T_AUTO_TOG 0b00010000
+#define bUH_T_RES	   0b00000001
+
+// UH_RX_CTRL
+#define bUH_R_TOG      0b10000000
+#define bUH_R_AUTO_TOG 0b00010000
+#define bUH_R_RES      0b00000100
+
+// --- System registers ---
+SFR(B, 0xF0);
+SFR(ACC, 0xE0);
+SFR(PSW, 0xD0);
+SFR(GLOBAL_CFG, 0xB1);
+SFR(CHIP_ID, 0xA1);
+SFR(SAFE_MOD, 0xA1);
+SFR(DPH, 0x83);
+SFR(DPL, 0x82);
+// SFR16E(DPTR, 0x8382);
+SFR(SP, 0x81);
+
+
+// --- Clock, Sleep and Power registers ---
+SFR(WDOG_COUNT, 0xFF);
+SFR(RESET_KEEP, 0xFE);
+SFR(WAKE_CTRL, 0xEB);
+SFR(SLEEP_CTRL, 0xEA);
+SFR(CLOCK_CFG, 0xB3);
+SFR(PLL_CFG, 0xB2);
+SFR(PCON, 0x87);
+
+
+// --- Interrupt registers ---
+SFR(IP_EX, 0xE9);
+SFR(IE_EX, 0xE8);
+    SBIT(IE_WDOG,  0xE8, 7);
+    SBIT(IE_GPIO,  0xE8, 6);
+    SBIT(IE_PWM1,  0xE8, 5);
+    SBIT(IE_UART1, 0xE8, 4);
+    SBIT(IE_ADC,   0xE8, 3);
+    SBIT(IE_USB,   0xE8, 2);
+    SBIT(IE_TMR3,  0xE8, 1);
+    SBIT(IE_SPI0,  0xE8, 0);
+SFR(GPIO_IE, 0xCF);
+SFR(IP, 0xB8);
+SFR(IE, 0xA8);
+    SBIT(EA,	0xA8, 7);
+    SBIT(E_DIS,	0xA8, 6);
+    SBIT(ET2,	0xA8, 5);
+    SBIT(ES,	0xA8, 4);
+    SBIT(ET1,	0xA8, 3);
+    SBIT(EX1,	0xA8, 2);
+    SBIT(ET0,	0xA8, 1);
+    SBIT(EX0,	0xA8, 0);
+
+
+// --- FlashROM registers ---
+SFR(ROM_DATA_H, 0x8F);
+SFR(ROM_DATA_L, 0x8E);
+// SFR16E(ROM_DATA, 0x8F8E)
+SFR(ROM_STATUS, 0x86);
+SFR(ROM_CTRL, 0x86);
+SFR(ROM_ADDR_H, 0x85);
+SFR(ROM_ADDR_L, 0x84);
+// SFR16E(ROM_ADDR, 0x8584);
+
+
+// --- Port registers ---
+SFR(XBUS_SPEED, 0xFD);
+SFR(XBUS_AUX, 0xA2);
+SFR(PIN_FUNC, 0xCE);
+SFR(P4_CFG, 0xC7);
+SFR(P5_IN, 0xC7);
+SFR(PORT_CFG, 0xC6);
+SFR(P0_PU, 0xC5);
+SFR(P0_DIR, 0xC4);
+SFR(P4_PU, 0xC3);
+SFR(P4_DIR, 0xC2);
+SFR(P4_IN, 0xC1);
+SFR(P4_OUT, 0xC0);
+SFR(P3_PU, 0xBF);
+SFR(P3_DIR, 0xBE);
+SFR(P2_PU, 0xBD);
+SFR(P2_DIR, 0xBC);
+SFR(P1_PU, 0xBB);
+SFR(P1_DIR, 0xBA);
+SFR(P1_IE, 0xB9);
+SFR(P3, 0xB0);
+SFR(P2, 0xA0);
+SFR(P1, 0x90);
+SFR(P0, 0x80);
+
+
+// --- Timer0, Timer1 registers ---
+SFR(TH1, 0x8D);
+SFR(TH0, 0x8C);
+SFR(TL1, 0x8B);
+SFR(TL0, 0x8A);
+SFR(TMOD, 0x89);
+SFR(TCON, 0x88);
+    SBIT(TF1, 0x88, 7);
+    SBIT(TR1, 0x88, 6);
+    SBIT(TF0, 0x88, 5);
+    SBIT(TR0, 0x88, 4);
+    SBIT(IE1, 0x88, 3);
+    SBIT(IT1, 0x88, 2);
+    SBIT(IE0, 0x88, 1);
+    SBIT(IT0, 0x88, 0);
+
+
+// --- UART0 registers ---
+SFR(SBUF, 0x99);
+SFR(SCON, 0x98);
+    SBIT(SM0, 0x98, 7);
+    SBIT(SM1, 0x98, 6);
+    SBIT(SM2, 0x98, 5);
+    SBIT(REN, 0x98, 4);
+    SBIT(TB8, 0x98, 3);
+    SBIT(RB8, 0x98, 2);
+    SBIT(TI,  0x98, 1);
+    SBIT(RI,  0x98, 0);
+
+
+// --- Timer2 registers ---
+SFR(TH2, 0xCD);
+SFR(TL2, 0xCC);
+// SFR16E(T2COUNT, 0xCDCC);
+SFR(T2CAP1H, 0xCD);
+SFR(T2CAP1L, 0xCC);
+// SFR16E(T2CAP1, 0xCDCC);
+SFR(RCAP2H, 0xCB);
+SFR(RCAP2L, 0xCA);
+// SFR16E(RCAP2, 0xCBCA);
+SFR(T2MOD, 0xC9);
+SFR(T2CON, 0xC8);
+
+
+// --- Timer3 registers ---
+// TODO: define
+
+
+// --- PWM1, PWM2 registers ---
+SFR(PWM_CYCLE, 0x9F);
+SFR(PWM_CK_SE, 0x9E);
+SFR(PWM_CTRL, 0x9D);
+SFR(PWM_DATA, 0x9C);
+SFR(PWM_DATA2, 0x9B);
+
+// --- SPI0 registers ---
+// TODO: define
+
+// --- SPI1 registers ---
+// TODO: define
+
+// --- UART1 registers ---
+SFR(SER1_DLL, 0x9A);
+SFR(SER1_FIFO, 0x9A);
+SFR(SER1_DIV, 0x97);
+SFR(SER1_ADDR, 0x97);
+SFR(SER1_MSR, 0x96);
+SFR(SER1_LSR, 0x95);
+SFR(SER1_MCR, 0x94);
+SFR(SER1_LCR, 0x93);
+SFR(SER1_IIR, 0x92);
+SFR(SER1_FCR, 0x92);
+SFR(SER1_DLM, 0x91);
+SFR(SER1_IER, 0x91);
+
+
+// --- ADC registers ---
+// TODO: define
+
+// --- USB registers ---
+SFR(USB_DMA_AH, 0xE7);
+SFR(USB_DMA_AL, 0xE6);
+SFR(UHUB1_CTRL, 0xE5);
+SFR(UHUB0_CTRL, 0xE4);
+SFR(UDEV_CTRL,  0xE4);
+SFR(USB_DEV_AD, 0xE3);
+SFR(USB_CTRL,   0xE2);
+SFR(USB_INT_EN, 0xE1);
+SFR(UEP4_T_LEN, 0xDF);
+SFR(UEP4_CTRL,  0xDE);
+SFR(UEP0_T_LEN, 0xDD);
+SFR(UEP0_CTRL,  0xDC);
+SFR(USB_HUB_ST, 0xDB);
+SFR(USB_MIS_ST, 0xDA);
+SFR(USB_INT_ST, 0xD9);
+SFR(USB_INT_FG, 0xD8);
+    SBIT(U_IS_NAK,     0xD8, 7);
+    SBIT(U_TOG_OK,     0xD8, 6);
+    SBIT(U_SIE_FREE,   0xD8, 5);
+    SBIT(UIF_FIFO_OV,  0xD8, 4);
+    SBIT(UIF_HST_SOF,  0xD8, 3);
+    SBIT(UIF_SUSPEND,  0xD8, 2);
+    SBIT(UIF_TRANSFER, 0xD8, 1);
+    SBIT(UIF_DETECT,   0xD8, 0);
+    SBIT(UIF_BUS_RST,  0xD8, 0);
+SFR(UEP3_T_LEN, 0xD7);
+SFR(UH_TX_LEN,  0xD7);
+SFR(UEP3_CTRL,  0xD6);
+SFR(UH_TX_CTRL, 0xD6);
+SFR(UEP2_T_LEN, 0xD5);
+SFR(UH_EP_PID,  0xD5);
+SFR(UEP2_CTRL,  0xD4);
+SFR(UH_RX_CTRL, 0xD4);
+SFR(UEP1_T_LEN, 0xD3);
+SFR(UEP1_CTRL,  0xD2);
+SFR(UH_SETUP,   0xD2);
+SFR(USB_RX_LEN, 0xD1);
+
+SFRX(UEP4_1_MOD, 0x2446);
+SFRX(UEP2_3_MOD, 0x2447);
+SFRX(UH_EP_MOD,  0x2447);
+SFRX(UEP0_DMA_H, 0x2448);
+SFRX(UEP0_DMA_L, 0x2449);
+SFRX(UEP1_DMA_H, 0x244A);
+SFRX(UEP1_DMA_L, 0x244B);
+SFRX(UEP2_DMA_H, 0x244C);
+SFRX(UEP2_DMA_L, 0x244D);
+SFRX(UH_RX_DMA_H, 0x244C);
+SFRX(UH_RX_DMA_L, 0x244D);
+SFRX(UEP3_DMA_H, 0x244E);
+SFRX(UEP3_DMA_L, 0x244F);
+SFRX(UH_TX_DMA_H, 0x244E);
+SFRX(UH_TX_DMA_L, 0x244F);
+
+
+// --- LED Control registers ---
+// TODO: define

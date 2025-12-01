@@ -1,0 +1,15 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "/usr/share/sdcc/include/",
+                "./include"
+            ],
+            // "intelliSenseMode": "unknown-sdcc-mcs51",
+            "compilerPath": "/usr/bin/sdcc",
+            "cStandard": "c23"
+        }
+    ],
+    "version": 4
+}
