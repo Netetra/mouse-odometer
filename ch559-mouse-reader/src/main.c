@@ -107,11 +107,11 @@ void main(void) {
           putchar(((uint8_t*)data)[i]);
         }
         putchar(0xAA);
-        for (uint8_t i = 0; i < 2; i++) {
-          data[i].x = 0;
-          data[i].y = 0;
-        }
-        delay_ms(1);
+
+        data[0].x = 0;
+        data[0].y = 0;
+        data[1].x = 0;
+        data[1].y = 0;
       }
       RI = 0;
     }
