@@ -8,6 +8,8 @@
 #define UART_TX_PIN 0
 #define UART_RX_PIN 1
 
+#define DPI 1000 // 実測値によるdpi
+
 struct Data {
     int16_t x;
     int16_t y;
@@ -68,26 +70,30 @@ int main() {
     double x = 0;
     double y = 0;
     double theta = 0;
-    const double L = 205.; // マウス間距離[mm]
-    const double N = 23; // mm単位に直せる謎の値
+    const double L = 200.; // マウス間距離[mm]
+    const double N = 7. / 150.; // mm単位に直す値
 
     while (true) {
         uart_putc_raw(UART_ID, 0x5A);
         sleep_ms(5);
         if (stage == Stage::Ready) {
-            double lx_count = *((int16_t*)(buffer + 0)) / N;
-            double ly_count = (*((int16_t*)(buffer + 2)) * -1) / N;
-            double rx_count = (*((int16_t*)(buffer + 4)) * -1) / N;
-            double ry_count = *((int16_t*)(buffer + 6)) / N;
-            double local_dx = (lx_count + rx_count) / 2.;
-            double local_dy = (ry_count + ly_count) / 2.;
-            double local_d_theta = (ry_count - ly_count) / L;
+            int16_t lx_count = *((int16_t*)(buffer + 0));
+            int16_t ly_count = *((int16_t*)(buffer + 2));
+            int16_t rx_count = *((int16_t*)(buffer + 4));
+            int16_t ry_count = *((int16_t*)(buffer + 6));
 
-            x += local_dx * cos(theta) - local_dy * sin(theta);
-            y += local_dy * cos(theta) + local_dx * sin(theta);
-            theta += local_d_theta;
+            x += rx_count;
+            y += ry_count;
+            printf("%4d, %4d\n", (int16_t)x, (int16_t)y);
+            // double local_x = (lx_count + rx_count) / 2.;
+            // double local_y = (ry_count + ly_count) / 2.;
+            // double local_theta = (ry_count - ly_count) / (L / N);
 
-            printf("%lf, %lf, %lf\n", x, y, (theta * 180.) / M_PI);
+            // x += local_x * cos(theta) - local_y * sin(theta);
+            // y += local_y * cos(theta) + local_x * sin(theta);
+            // theta += local_theta;
+
+            // printf("%4d, %4d, %3d\n", (int16_t)(x * N), (int16_t)(y * N), (int16_t)((theta * 180.) / M_PI));
             stage = Stage::WaitSOF;
         }
     }

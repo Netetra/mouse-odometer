@@ -16,8 +16,9 @@ struct Report {
   uint8_t left: 1;
   uint8_t right: 1;
   uint8_t wheel: 1;
-  uint8_t padding: 3;
-  uint32_t x_y_scroll;
+  uint8_t _padding: 5;
+  uint8_t x_y[3];
+  int8_t scroll;
 };
 
 __code struct SetupRequest set_configuration_req = {
@@ -63,14 +64,14 @@ void poll_handler(uint8_t hub) {
   if (error) { return; }
   if (len != sizeof(struct Report)) { return; }
   struct Report* report = (struct Report*)buffer;
-  int16_t x_12bit = report->x_y_scroll & 0x00000FFF;
+  uint16_t x_12bit = ((report->x_y[1] & 0x0F) << 8) | report->x_y[0];
+  uint16_t y_12bit = (report->x_y[2] << 4) | ((report->x_y[1] & 0xF0) >> 4);
   int16_t x = (x_12bit & 0x800) ? (x_12bit | 0xF000) : (x_12bit & 0x0FFF);
-  int16_t y_12bit = (report->x_y_scroll & 0x00FFF000) >> 12;
   int16_t y = (y_12bit & 0x800) ? (y_12bit | 0xF000) : (y_12bit & 0x0FFF);
-  int8_t scroll = (report->x_y_scroll & 0xFF000000) >> 24;
+
   DEBUG("hub%d: ", hub);
-  DEBUG("left %d, right %d, wheel %d, ", report->left, report->right, report->wheel);
-  DEBUG("x %4d, y %4d, scroll %4d\n", x, y, scroll);
+  DEBUG("left %d, right %d, wheel %d, scroll %d, ", report->left, report->right, report->wheel, report->scroll);
+  DEBUG("x %4d, y %4d\n", x, y);
 
   if (hub == 0) {
     data[0].x += x;
@@ -99,6 +100,8 @@ void main(void) {
 
     usbh_poll(0);
     usbh_poll(1);
+
+    printf("%4d, %4d\n", data[1].x, data[1].y);
 
     if (RI) {
       if (SBUF == 0x5A) {
